@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4f46e5">
+  <title>Planning de révisions</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Planning de révisions</p>
+        <h1>Octobre 2026</h1>
+        <p class="muted">Bio, biochimie et maths — avec le gros du travail placé en semaine.</p>
+      </div>
+
+      <div class="progress-card">
+        <div class="progress-ring">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
+            <circle id="ring" class="ring-fg" cx="60" cy="60" r="50"></circle>
+          </svg>
+          <div class="ring-label">
+            <strong id="progressPercent">0%</strong>
+            <span>terminé</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="summary-grid">
+      <article class="summary-card">
+        <span>XP</span>
+        <strong id="xpValue">0</strong>
+      </article>
+      <article class="summary-card">
+        <span>Série</span>
+        <strong id="streakValue">0 jour</strong>
+      </article>
+      <article class="summary-card">
+        <span>Prochaine échéance</span>
+        <strong id="deadlineValue">—</strong>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Énergie du jour</h2>
+          <p class="muted small">Le contenu affiché s’adapte.</p>
+        </div>
+        <div class="energy-group" role="group" aria-label="Niveau d'énergie">
+          <button data-energy="light">😴 Léger</button>
+          <button data-energy="normal" class="active">🙂 Normal</button>
+          <button data-energy="push">⚡ Motivé</button>
+        </div>
+      </div>
+    </section>
+
+    <nav class="tabs" aria-label="Navigation">
+      <button class="active" data-view="today">Aujourd’hui</button>
+      <button data-view="calendar">Calendrier</button>
+      <button data-view="planner">Planning</button>
+      <button data-view="progress">Progression</button>
+    </nav>
+
+    <section id="view-today" class="view active">
+      <div class="section-title">
+        <div>
+          <h2 id="todayTitle">Aujourd’hui</h2>
+          <p id="todaySubtitle" class="muted small"></p>
+        </div>
+        <button id="addTaskBtn" class="primary">+ Ajouter</button>
+      </div>
+      <div id="todayTasks" class="task-list"></div>
+    </section>
+
+    <section id="view-calendar" class="view">
+      <div class="section-title">
+        <h2>Calendrier</h2>
+        <span class="muted small">Octobre 2026</span>
+      </div>
+      <div class="calendar-wrap">
+        <div class="calendar" id="calendar"></div>
+      </div>
+    </section>
+
+    <section id="view-planner" class="view">
+      <div class="section-title">
+        <div>
+          <h2>Planning complet</h2>
+          <p class="muted small">Modifier, cocher ou reporter une séance.</p>
+        </div>
+        <button id="clearDateFilter" class="secondary" hidden>Afficher tout</button>
+      </div>
+      <div id="planner"></div>
+    </section>
+
+    <section id="view-progress" class="view">
+      <div class="section-title">
+        <h2>Progression</h2>
+      </div>
+
+      <div id="subjectProgress" class="subject-progress"></div>
+
+      <div class="section-title">
+        <h2>Chapitres</h2>
+      </div>
+      <div id="chapterChecklist" class="chapter-grid"></div>
+
+      <div class="section-title">
+        <h2>Sauvegarde</h2>
+      </div>
+      <div class="panel actions-panel">
+        <button id="exportBtn" class="secondary">Exporter</button>
+        <label class="secondary file-button">
+          Importer
+          <input type="file" id="importInput" accept="application/json">
+        </label>
+        <button id="resetBtn" class="danger">Réinitialiser</button>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="taskDialog">
+    <form id="taskForm" method="dialog">
+      <h2 id="dialogTitle">Modifier la séance</h2>
+      <input type="hidden" id="taskId">
+
+      <div class="form-grid">
+        <label>
+          Date
+          <input id="taskDate" type="date" required>
+        </label>
+
+        <label>
+          Matière
+          <select id="taskSubject">
+            <option value="bio">Biologie</option>
+            <option value="chim">Biochimie</option>
+            <option value="math">Maths</option>
+          </select>
+        </label>
+
+        <label class="full">
+          Séance
+          <input id="taskTitle" type="text" maxlength="120" required>
+        </label>
+
+        <label class="full">
+          Note
+          <textarea id="taskNote" maxlength="300"></textarea>
+        </label>
+
+        <label>
+          Durée (min)
+          <input id="taskMinutes" type="number" min="5" max="300" step="5" value="45" required>
+        </label>
+
+        <label>
+          Type
+          <select id="taskPriority">
+            <option value="core">Principale</option>
+            <option value="bonus">Bonus</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="dialog-actions">
+        <button type="button" id="deleteTaskBtn" class="danger" hidden>Supprimer</button>
+        <button type="button" id="cancelDialog" class="secondary">Annuler</button>
+        <button type="submit" class="primary">Enregistrer</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
